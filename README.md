@@ -440,48 +440,45 @@ It is generally not recommended to write our own session tracking code. Even the
 
 # BOOK-3:  Web Vulnerability Database
 CSRF / One-click attack / session riding: Exploiting the trust the site has in the user’s browser
--	Automatically works in case of Integrated Windows Authentication (IWA)
--	Victim is not actively participating the attack
--	CSRF is amplified when application is also vulnerable to XSS
--	Amazon had one-click CSRF vulnerability (adding items to Victim’s cart by attacker)
--	Code for one-click attack:
+ - Automatically works in case of Integrated Windows Authentication (IWA)
+ - Victim is not actively participating the attack
+ - CSRF is amplified when application is also vulnerable to XSS
+ - Amazon had one-click CSRF vulnerability (adding items to Victim’s cart by attacker)
+ - Code for one-click attack:
 Using hidden iframe so users won’t recognize
-o	<iframe style="width: 0px; height: 0px; visibility: hidden" name="hidden"></iframe>
+ - <iframe style="width: 0px; height: 0px; visibility: hidden" name="hidden"></iframe>
          Form submitting to Amazon for attack
-o	<form name="csrf" action=http://amazon.com/gp/product/handle-buy-box method="post" target="hidden">
-        <input type="hidden" #DETAILS OF ITEMS />
-</form>
-        Using JS to submit with POST
-o	<script>document.csrf.submit();</script>
--	Attack triggers: 
-o	<IMG> | Easiest and works only for GET requests | Highest risk for application teams
-	<IMG src=http://www.bank.com/transfer.cgi?amount=10&dest=001-002>
-o	<script> | Trigger a visit to specific URL
-	<script src=http://www.bank.com/transfer.cgi?amount=10&dest=001-002 >
-o	<Iframe> | Simple or complex, for POST requests |
-	<iframe style="width: 1px; height: 1px; visibility: hidden" name="hidden"></iframe>
-	<form name="csrf" action=http://www.bank.com/transfer.cgi method="post" target="hidden">
-•	<input type="hidden" name="amount" value="10"/>
-	</form>
-	<script>document.csrf.submit();</script>
-o	XML HTTP (AJAX)
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", "test.txt",true);
-	xmlhttp.send(null);
--	Attack mitigations: Set all FORMS to submit only via POST (although not the only solution to CSRF), Lowering session timeout helps, Check referrer header, CAPTCHA (strong protection against automated requests, not practical for every functionality), Anti-CSRF token (Synchronizer token): Token must be random and verifiable at server, SameSite Cookie
-o	CAPTCHA: Completely Automated Public Turing test to tell Computers and Humans Apart 
-o	Anti-CSRF token: One token for user, reused for all pages
-	One token per form / page of the application
-	Hash (form + secret + sessionID) and compare at server
-o	SameSite Cookie: Set-Cookie: key=value; SameSite=strict
-	Cookie is sent over same origin request
-•	strict means third-party requests will be restricted
-•	lax means Allow GET form requests, <a href>, Prerender link to send cookie
-o	Limited support by browsers
-
--	Java, .NET, PHP: Use OWASP CSRFGuard
--	ASP.NET: Use ViewStateUserKey / AntiForgeryToken from System.Web.Mvc
--	Java: HTTP Data Integrity Validator (HDIV) has Anti-CSRF feature / Struts and Spring Security
+ -  - <form name="csrf" action=http://amazon.com/gp/product/handle-buy-box method="post" target="hidden">
+        <input type="hidden" #DETAILS OF ITEMS /> </form>
+Using JS to submit with POST
+ -  - <script>document.csrf.submit();</script>
+ - Attack triggers: 
+ -  - <IMG> | Easiest and works only for GET requests | Highest risk for application teams
+ -  - <IMG src=http://www.bank.com/transfer.cgi?amount=10&dest=001-002>
+ - <script> | Trigger a visit to specific URL
+ - <script src=http://www.bank.com/transfer.cgi?amount=10&dest=001-002 >
+ -  - <Iframe> | Simple or complex, for POST requests |
+ -  - <iframe style="width: 1px; height: 1px; visibility: hidden" name="hidden"></iframe>
+ -  - <form name="csrf" action=http://www.bank.com/transfer.cgi method="post" target="hidden">
+ - <input type="hidden" name="amount" value="10"/></form>
+ -  - <script>document.csrf.submit();</script>
+ - XML HTTP (AJAX)
+ -  - var xmlHttp = new XMLHttpRequest();
+ -  - xmlHttp.open("POST", "test.txt",true);
+ -  - xmlhttp.send(null);
+ - Attack mitigations: Set all FORMS to submit only via POST (although not the only solution to CSRF), Lowering session timeout helps, Check referrer header, CAPTCHA (strong protection against automated requests, not practical for every functionality), Anti-CSRF token (Synchronizer token): Token must be random and verifiable at server, SameSite Cookie
+ -  - CAPTCHA: Completely Automated Public Turing test to tell Computers and Humans Apart 
+ -  - Anti-CSRF token: One token for user, reused for all pages
+ -  - One token per form / page of the application
+ -  - Hash (form + secret + sessionID) and compare at server
+ -  - SameSite Cookie: Set-Cookie: key=value; SameSite=strict
+ -  - Cookie is sent over same origin request
+ - strict means third-party requests will be restricted
+ - lax means Allow GET form requests, <a href>, Prerender link to send cookie
+ -  - Limited support by browsers
+ - Java, .NET, PHP: Use OWASP CSRFGuard
+ - ASP.NET: Use ViewStateUserKey / AntiForgeryToken from System.Web.Mvc
+ - Java: HTTP Data Integrity Validator (HDIV) has Anti-CSRF feature / Struts and Spring Security
 Greybox preferred over Blackbox for testing
 
 # BOOK-3:  Input related flaws
@@ -512,27 +509,27 @@ Defense: Proper input validation in code (check for canonicalization/encoding do
 
 # BOOK-3:  SQL Injection
 Most hostile SQLi (with metacharacters like ‘ or “ or ; etc.) allows xp_cmdshell on MS SQL Server. This enables taking control on underlying host of DB server. Can also be used to jump to another host and take control of it too.
--	Error messages are good indicators to attackers:
-o	Java.sql.SQLException
-o	[ODBS SQL Server Driver]
-o	DBD:
-o	Microsoft OLE DB Provider for ODBC Drivers error
-o	System.Data.Odbc.OdbcException
-o	Oracle error: unable to perform query
+ - Error messages are good indicators to attackers:
+ -  - Java.sql.SQLException
+ -  - [ODBS SQL Server Driver]
+ -  - DBD:
+ -  - Microsoft OLE DB Provider for ODBC Drivers error
+ -  - System.Data.Odbc.OdbcException
+ -  - Oracle error: unable to perform query
 Blind SQLi: Based on question and answers (Yes or No from server)
 Defense: Constrained input (type, length, format, range) | hard to perform consistently | reject bad data | Look for encoding
--	Just input validations are not enough (e.g. if developers block AND or OR in inputs, attackers can inject: O/**/R)
-o	/**/ are comments in SQL databases
--	Escaping input (database dependent solution and also doesn’t work for numeric SQL) -> effective solution
-o	\’ in MySQL or “ in MSSQL etc.
-o	Should escape all DB characters (--, #, @)
--	Language built-in protections can be bypassed using char()
-o	Perl: DBI:Quote			//add a slash before special character
-o	PHP: mysql_real_escape_string  	//add a slash before special character
--	Prepared statement: Ultimate defense. 
-o	@ sign is used in ASP.net | ? in Java | Don’t use dynamic SQL within stored procedure
--	Database permissions and hardening (delete unwanted stored procedures like xp_cmdshell, delete default user accounts, Monitor outbound SQL connections)
--	Limit SQL error messages (security thru obscurity)
+ - Just input validations are not enough (e.g. if developers block AND or OR in inputs, attackers can inject: O/**/R)
+ -  - /**/ are comments in SQL databases
+ - Escaping input (database dependent solution and also doesn’t work for numeric SQL) -> effective solution
+ - \’ in MySQL or “ in MSSQL etc.
+ - Should escape all DB characters (--, #, @)
+ - Language built-in protections can be bypassed using char()
+ -  - Perl: DBI:Quote			//add a slash before special character
+ -  - PHP: mysql_real_escape_string  	//add a slash before special character
+ - Prepared statement: Ultimate defense. 
+ -  - @ sign is used in ASP.net | ? in Java | Don’t use dynamic SQL within stored procedure
+ - Database permissions and hardening (delete unwanted stored procedures like xp_cmdshell, delete default user accounts, Monitor outbound SQL connections)
+ - Limit SQL error messages (security thru obscurity)
 
 # BOOK-3:  Cross Site Scripting / XSS
 3 parties: Client (Victim), Server, Attacker
@@ -559,19 +556,19 @@ Testing: OWASP XSS Filter evasion cheat sheet
 # BOOK-3:  Input validation failures
 It is tough, no one size fits all! Each field has different validation needs.
 Multi-layer defense:
--	Client-side validation -> WAF rule -> Web server filter -> Validation within dev framework -> custom validation per form field
--	Validate the source of data (if data is expected in POST, make sure to add that as validation on server side code)
+ - Client-side validation -> WAF rule -> Web server filter -> Validation within dev framework -> custom validation per form field
+ - Validate the source of data (if data is expected in POST, make sure to add that as validation on server side code)
 Canonicalization: A big issue for input validations; Encoding depends on platform supports: UTF-8 for .NET and ISO-8859-1 for php
 Regexp: 
-•	^\d\d\d-\d\d\d\$ matches 111-111 or 333-333   (^ means beginning of string and $ means end of string)
-•	^\w{6}$ matches aaaaaa, 111111, as35fh
-•	^\d{3}-\d{2}-\d{4}$ matches 123-45-6789 (social security number)
-•	^([0-5]?[0-9]|6[0-5])$ matches any number from 0 to 65  (? means optional / immediate previous element)
-•	^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2-4}$ matches any email address 
-•	^\d{5}([\-]\d{4})?$  matches zip code 
-•	^http[s]?://[a-z0-9\.]+\/[a-z0-9]+ matches URL
-•	\d(?:(?:25[0-9]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-0]|[01\?[0-9][0-9]?)\b matches IP address
-•	\w matches even non-English characters
+ - ^\d\d\d-\d\d\d\$ matches 111-111 or 333-333   (^ means beginning of string and $ means end of string)
+ - ^\w{6}$ matches aaaaaa, 111111, as35fh
+ - ^\d{3}-\d{2}-\d{4}$ matches 123-45-6789 (social security number)
+ - ^([0-5]?[0-9]|6[0-5])$ matches any number from 0 to 65  (? means optional / immediate previous element)
+ - ^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2-4}$ matches any email address 
+ - ^\d{5}([\-]\d{4})?$  matches zip code 
+ - ^http[s]?://[a-z0-9\.]+\/[a-z0-9]+ matches URL
+ - \d(?:(?:25[0-9]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-0]|[01\?[0-9][0-9]?)\b matches IP address
+ - \w matches even non-English characters
 
 Whitelisting: For simple and fixed data fields, use whitelist (precomputed / expected values only and nothing else!)
 •	Factors to evaluate: Length (number of characters), Range (upper and lower bounds), Format (date/phone, etc.), Type (Integers or Alphanumeric, etc.)
@@ -593,7 +590,7 @@ Reading files: Common vuln: Buffer-overflow and Path traversal.
 Handling HTML inputs: Best way to allow HTML and disallow scripting is to use: BBCode, WikiText, Textile => these are pseudo-HTML that can be converted into HTML on server side. Also PHP has HTML purifier; OWASP AntiSamy project for Java and .NET to securely allow HTML inputs by user.
 
 PHP filter function: For Input validation | Can examine i/p thru prelist of expected formats (email, IP, etc.) | 
-•	$email = filter_var($_GET['var'], FILTER_SANITIZE_EMAIL);
+- $email = filter_var($_GET['var'], FILTER_SANITIZE_EMAIL);
 
 ASP.NET validation controls: Has client side checking as well; 5 types of validators: RequireFieldValidator, CompareValidator, RangeValidator, RegularExpressionValidator, CustomValidator. 
 	<asp:TextBox id="txtZIP" runat="SERVER">
@@ -631,14 +628,14 @@ Disallowing double extension files in Apache config:
 # BOOK-3:  Business Logic & Concurrency
 Vuln scans cannot detect business logic (real life business objectives) security flaws
 Business logic flaw mitigation strategies: At design phase of SDLC: abuse cases are considered/mapped to data, Secure person review and test those
-•	Testing: Difficult to catch at source code review; Test at design (whitebox / graybox); Understanding context of app is key (“think out of the box”)!
-o	Abuse cases: Can the sequence of step be missed or bypassed?
-o	What values are we expecting? What if different values are coming in?
-o	Steps are time sensitive? Any controls in place to enforce time constraint?
-o	If step terminates immediately, what is the impact on other steps?
-o	Who can perform the steps?
+- Testing: Difficult to catch at source code review; Test at design (whitebox / graybox); Understanding context of app is key (“think out of the box”)!
+-- Abuse cases: Can the sequence of step be missed or bypassed?
+-- What values are we expecting? What if different values are coming in?
+-- Steps are time sensitive? Any controls in place to enforce time constraint?
+-- If step terminates immediately, what is the impact on other steps?
+-- Who can perform the steps?
 Concurrency: Concurrency enhances scalability so application can take more loads but adds security issues!
-•	Control measures: Pessimistic (Block ops that would cause integrity issues) | Optimistic (Do executions first, check and resolve conflicts later)
+- Control measures: Pessimistic (Block ops that would cause integrity issues) | Optimistic (Do executions first, check and resolve conflicts later)
 Deadlock issues: When using lock during concurrency, it might create a deadlock. 
 Mitigation: Isolation (Lock only what’s needed) | Optimistic control is suitable for HTTP stateless nature | No general fix (unique solution to each scenario)
 Testing: Code and design review | difficult to test | Many factors might mask the problem
@@ -658,51 +655,51 @@ Log injection mitigation: Static information in log file | Any user i/p to go th
 
 Error handling: Leverage standard frameworks: log4j, log4php, log4net, etc. | Web user should be able to write logs but not read it
 What to log? Authn and Authz (must log both successes and failures) | Account lockouts | Policy violations | Logs should include accessed resource (URL, DB tables and fields, username) and the reason for deny access (when fail) | Log session termination (difficult, as some sessions timeout) | Data actions (read, write, delete): write and delete are more imp | changes to data structure | Admin functions | Any high-risk event | Errors (file not found, cannot open errors, Unexpected states, connection failures (DB), timeout errors)
-•	Logging at WAF: Do not rely on code, so easy to implement | Doesn’t require server resources | Log i/p fields and o/p | Safe to have logs outside of web application itself
+- Logging at WAF: Do not rely on code, so easy to implement | Doesn’t require server resources | Log i/p fields and o/p | Safe to have logs outside of web application itself
 Apache webserver log format: %h %l %u %t \”%r\” %>s  (hostname, logname, user, time, first line of request, status code, # of bytes)
 IIS log format: date time s-computer s-ip cs-method cs-uri-stem s-port cs-username c-ip cs(User-agent) cs(Referer) cs-host sc-status sc-bytes cs-bytes time-taken
 
 # BOOK-3:  Incident Handling & Intrusion Detection
 Companies often overestimate their IH capability;
 6 steps of IH: Preparation (before actual incident happens) | Identification (determine it is event or really an incident) | Containment (Doesn’t spread to other systems; stop the bleeding; bringing under control) | Eradication (actual cleaning the incident, stopping the root cause, make sure it is not coming back) | Recovery (Affected systems are put back to production and monitored) | Lessons Learnt (look back and seek ways to improve)
-•	Preparation: Make sure systems are logging and logs are stored | Setup drills | Response kit (screwdriver, blank CD, OS binary media, forensic software, call list, cell phone, extra batteries) | know the app owner (to escalate)
-•	Identification: Leverage the helpdesk | Read logs | Verify existence of attacks | Run IR checklist | Declare & assemble CSIRT
-•	Containment: Preserve evidence | Firewall is used | Stop user login system | Segregate the n/w | Bring offline, if needed
-•	Eradication: Keep track of actions | Use mod_security, URLScan, WebKnight to block attacks (Virtual patching)| Look nearby
-•	Recovery: Validate web app functionalities | Packet capture and logging | IPS and WAF are essential to monitor
-•	Lessons Learnt: No finger pointing | Often ignored step
+- Preparation: Make sure systems are logging and logs are stored | Setup drills | Response kit (screwdriver, blank CD, OS binary media, forensic software, call list, cell phone, extra batteries) | know the app owner (to escalate)
+- Identification: Leverage the helpdesk | Read logs | Verify existence of attacks | Run IR checklist | Declare & assemble CSIRT
+- Containment: Preserve evidence | Firewall is used | Stop user login system | Segregate the n/w | Bring offline, if needed
+- Eradication: Keep track of actions | Use mod_security, URLScan, WebKnight to block attacks (Virtual patching)| Look nearby
+- Recovery: Validate web app functionalities | Packet capture and logging | IPS and WAF are essential to monitor
+- Lessons Learnt: No finger pointing | Often ignored step
 Short-term fixes and long-term fixes (strategic) must be evaluated and considered.
 Quick fix for critical vulnerabilities: WAF, Web server filter, Blacklist within program code (configuration)
 
 Case study: Twitter XSS worm / 17-yrs old admitted to hacking
 
 Intrusion Detection in Web Apps: 
-•	Design intrusion detection into the web app code; Needs explicit design, it’s not automatic
-•	Approaches:
-o	Traffic based: Inspect content against known attack patterns / match anomaly behavior (inward + outward)
-	For IDS inline, blocking is dropping packets | For IDS eavesdropping, spoofed TCP reset packets are sent to server
-	Doesn’t work always due to encoding / evading mechanism by attackers
-	What you see is what you get
-	Issues: Takes time to develop | staying up-to-date on attacks is hard | attacks on web server can’t be detected in code
-o	Server-based:  
-o	Hybrid: Agent or software installed within app platform | Analyzes and monitors bad inputs | Accurate detection
-	Vendors: Waratek, Wallarm, Contrast, Signal Sciences, ThreatX
+ Design intrusion detection into the web app code; Needs explicit design, it’s not automatic
+Approaches:
+Traffic based: Inspect content against known attack patterns / match anomaly behavior (inward + outward)
+- For IDS inline, blocking is dropping packets | For IDS eavesdropping, spoofed TCP reset packets are sent to server
+- Doesn’t work always due to encoding / evading mechanism by attackers
+- What you see is what you get
+- Issues: Takes time to develop | staying up-to-date on attacks is hard | attacks on web server can’t be detected in code
+Server-based:  
+Hybrid: Agent or software installed within app platform | Analyzes and monitors bad inputs | Accurate detection
+- Vendors: Waratek, Wallarm, Contrast, Signal Sciences, ThreatX
 
 # BOOK-4: Anti Automation
 Anti-Automation and Anti-Spam: CAPTCHA: Not a significant measure of protection! 3rd world countries get 3 USD a day to solve CAPTCHA issues during automation. 
 
-•	Effective attack against CAPTCHA: OCR (Optical Character Recognition): BY shape of the objects. 
-o	CAPTCHA at Hotmail is found to be cracked 20% of the time by specific malware: botnet agents
+1. Effective attack against CAPTCHA: OCR (Optical Character Recognition): BY shape of the objects. 
+2. CAPTCHA at Hotmail is found to be cracked 20% of the time by specific malware: botnet agents
 Rate Limit: Might work for brute force and data scrapping attacks. E.g. access a page only 3 times in a minute. WAF can do this. Else need to explicitly code it; most web servers do NOT support this yet.
-•	Apache users can leverage mod_bandwidth
+3. Apache users can leverage mod_bandwidth
 Search engines like Google, Bing, DuckDuckGo, etc. rank sites based on number of links and its relevance. Spammers post their site link (backlink) on every internet site, in order to boost their site rank: WEB LINK SPAM
 Mitigation against Web Link Spam:
-•	Check for referrer header: 
-•	Blacklist (user-agent, XBL, open proxies): https://perishablepress.com/ultimate-htaccess-blacklist-2-compressed-version/ & https://www.spamhaus.org/xbl/
-•	JavaScript tricks: Script to run on client side to detect browser and confirm against user-agent field
-o	http://www.thespanner.co.uk/2009/01/29/detecting-browsers-javascript-hacks/
-•	Time based behavior: How quickly requests are coming through (humans vs computers)
-•	Reduce incentive (Use NOFOLLOW meta tag): Prevents search engine to considers ranking the sites / devalues the spammers
+4. Check for referrer header: 
+5. Blacklist (user-agent, XBL, open proxies): https://perishablepress.com/ultimate-htaccess-blacklist-2-compressed-version/ & https://www.spamhaus.org/xbl/
+6. JavaScript tricks: Script to run on client side to detect browser and confirm against user-agent field
+   http://www.thespanner.co.uk/2009/01/29/detecting-browsers-javascript-hacks/
+7. Time based behavior: How quickly requests are coming through (humans vs computers)
+8. Reduce incentive (Use NOFOLLOW meta tag): Prevents search engine to considers ranking the sites / devalues the spammers
 SpamBam and Akismet are two projects that deal with comment spam. Designed for blogs but can be applied on contact forms.
 
 Honeytoken: Set a trap to detect unauthorized use of the system. Static variable or condition that is outside normal execution (or operation). When manipulation of these are detected, likely an attack, admins are notified & attackers are blocked (source ip, user id, etc.).
@@ -950,7 +947,7 @@ JavaScript is used to move the iFrame under the mouse click.
 Effects of Clickjacking: CSRF | can change s/w settings: Google desktop / Adobe Flash | click fraud / user framing
 Flash attack -> linked to clickjacking
 Framebusting -> mitigation technique for clickjacking | prevent a page from being within a IFrame
-<script> if(top != self)
+<script> if(top != self) </script>
 
 Anti-Framebusting: attacker can disable framebusting using <Iframe security=restricted>, which disables JavaScript. Another way is:
  var prevent_bust = 0windowsondebandunload = function() { prevent_bust++ } 
