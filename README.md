@@ -688,25 +688,27 @@ Hybrid: Agent or software installed within app platform | Analyzes and monitors 
 # BOOK-4: Anti Automation
 Anti-Automation and Anti-Spam: CAPTCHA: Not a significant measure of protection! 3rd world countries get 3 USD a day to solve CAPTCHA issues during automation. 
 
-1. Effective attack against CAPTCHA: OCR (Optical Character Recognition): BY shape of the objects. 
-2. CAPTCHA at Hotmail is found to be cracked 20% of the time by specific malware: botnet agents
-Rate Limit: Might work for brute force and data scrapping attacks. E.g. access a page only 3 times in a minute. WAF can do this. Else need to explicitly code it; most web servers do NOT support this yet.
-3. Apache users can leverage mod_bandwidth
+ - Effective attack against CAPTCHA: OCR (Optical Character Recognition): BY shape of the objects.
+ - CAPTCHA at Hotmail is found to be cracked 20% of the time by specific malware: botnet agents
+ -  - Rate Limit: Might work for brute force and data scrapping attacks. E.g. access a page only 3 times in a minute. WAF can do this. Else need to explicitly code it; most web servers do NOT support this yet.
+ - Apache users can leverage mod_bandwidth
+
 Search engines like Google, Bing, DuckDuckGo, etc. rank sites based on number of links and its relevance. Spammers post their site link (backlink) on every internet site, in order to boost their site rank: WEB LINK SPAM
+
 Mitigation against Web Link Spam:
-4. Check for referrer header: 
-5. Blacklist (user-agent, XBL, open proxies): https://perishablepress.com/ultimate-htaccess-blacklist-2-compressed-version/ & https://www.spamhaus.org/xbl/
-6. JavaScript tricks: Script to run on client side to detect browser and confirm against user-agent field
-   http://www.thespanner.co.uk/2009/01/29/detecting-browsers-javascript-hacks/
-7. Time based behavior: How quickly requests are coming through (humans vs computers)
-8. Reduce incentive (Use NOFOLLOW meta tag): Prevents search engine to considers ranking the sites / devalues the spammers
+ - Check for referrer header
+ - Blacklist (user-agent, XBL, open proxies): https://perishablepress.com/ultimate-htaccess-blacklist-2-compressed-version/ & https://www.spamhaus.org/xbl/
+ - JavaScript tricks: Script to run on client side to detect browser and confirm against user-agent field 
+  -  - http://www.thespanner.co.uk/2009/01/29/detecting-browsers-javascript-hacks/
+ - Time based behavior: How quickly requests are coming through (humans vs computers)
+ - Reduce incentive (Use NOFOLLOW meta tag): Prevents search engine to considers ranking the sites / devalues the spammers
 SpamBam and Akismet are two projects that deal with comment spam. Designed for blogs but can be applied on contact forms.
 
 Honeytoken: Set a trap to detect unauthorized use of the system. Static variable or condition that is outside normal execution (or operation). When manipulation of these are detected, likely an attack, admins are notified & attackers are blocked (source ip, user id, etc.).
 Where to set these traps: 
-•	Session ID (length and format): If they are changed, attack is in place.
-•	Additional hidden form field value or extra cookie value (any manipulation of these is an identification of attack)
-•	Fake admin page in robots.txt 
+ - Session ID (length and format): If they are changed, attack is in place.
+ - Additional hidden form field value or extra cookie value (any manipulation of these is an identification of attack)
+ - Fake admin page in robots.txt 
 
 # BOOK-4: Security Testing
 During dev: SAST, SCA, Unit Testing | After dev: Runtime testing, Pen tests
