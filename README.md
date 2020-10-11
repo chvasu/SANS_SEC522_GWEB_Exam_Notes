@@ -690,6 +690,7 @@ o	Hybrid: Agent or software installed within app platform | Analyzes and monitor
 
 # BOOK-4: Anti Automation
 Anti-Automation and Anti-Spam: CAPTCHA: Not a significant measure of protection! 3rd world countries get 3 USD a day to solve CAPTCHA issues during automation. 
+
 •	Effective attack against CAPTCHA: OCR (Optical Character Recognition): BY shape of the objects. 
 o	CAPTCHA at Hotmail is found to be cracked 20% of the time by specific malware: botnet agents
 Rate Limit: Might work for brute force and data scrapping attacks. E.g. access a page only 3 times in a minute. WAF can do this. Else need to explicitly code it; most web servers do NOT support this yet.
@@ -1002,11 +1003,13 @@ New HTML5 input fields: tel, url, email, search / canvas elements (blank area) /
 Safari and Chrome: No warn on fail validations
 Geolocation is part of HTML5: JavaScript and browser addson can access user location information. This works only over TLS (enforced by browser). Can be spoofed | not trustworthy
 
+
 # BOOK-5: HTTP Parameter Pollution
 HTTP allows multiple values for same variable name in requests.
 ASP.NET: concatenates values: key=val1,val2 | PHP/Apache: last value: key=val2 | JSP/Tomcat & Oralce & Servlet & Perl CGI/Apache: first occurrence: key=val1 | Python: Array
 -	within platform API, there is an inconsistency: getParameter() returns first value | getParameterValues() return array of strings
 -	WAF detects SQLi when SELECT and FROM are in same parameter but skips it when SELECT is in one parameter and FROM is in another parameter
+
 
 # BOOK-5: Web App Operational Security
 Google webmaster tool: Manages Google indexing (faster/slower or removing URL ) | Search engine optimization | Email alert on malware
@@ -1014,8 +1017,10 @@ Google safe browsing screen shot.
 Web deployment security: WebDAV, SFTP, Windows File Share, Rsync (sync file across two machines), Git, Container transfer, Deployment to all load balancers 
 Backups + Domain name registrations (use registry lock) + Failover (manual or automatic; DNS/BGP/LB/PC swap): beware of link latency & connectivity issues cause data integrity issues + Make use of CDN (Content Delivery Networks) + SRI (Sub resource integrity): Indicates hash of remote content (SHA256/384/512) | If remote host doesn’t support COR (cross origin req), req will fail and security error message is thrown. https://www.srihash.org/
 
+
 # BOOK-5: Tokenization
 Protect sensitive data by making and using tokens out of sensitive data | Alternate to encryption
+
 
 # BOOK-5: Unicode
 ASCII: 128 total characters | 94 printable | 33 control chars (spacing, now obselete) | A = 41 (hex) and J = 4A (hex)
@@ -1044,6 +1049,7 @@ Compatibility normalization: equivalent of two characters
 Best-fit mapping: As there are >100K Unicode in the world, our OS will not have all of them. So OS does best-fit mapping to replace the unavailable ones with lookalikes.
 Best practices for Unicode: Use latest version (12.1) | conversion is dangerous, use same encoding | UTF-8 is recommended by w3c | Disable best-fit mapping | NFKC normalization for validation | normalize before validation | educate developers on Unicode | Use standard libraries.
 
+
 # BOOK-5: SSO & Session Sharing
 3 aspects to consider when sharing user ID: Session + Authn + Authz
 -	Authn session info transfer: Secondary session info exchanged via back-channel (e.g. VPN).
@@ -1065,10 +1071,12 @@ OAuth Security issues: user pwd change on Twitter doesn’t alter the refresh_to
 JWT: Header.Payload.Signature  	//format 	|  Digitally signed with secret or public/private key. 
 OpenID Connect: One login for multiple sites | ID token in JWT format | set of claims for user
 
+
 # BOOK-5: IPv6
 16 bytes/128b | Hexadecimal | First half: Network portion & second-half is interface ID (mac address) | Last 64b can be used as global cookie | Can be changed on reboot | Can be abbreviated | Perform i/p validation (IPv6 allowed/required?)
 Routable IPv6 start with 2 or 3 | 2001:db8… used for examples | fe80:… for local traffic | ::1 = loopback | :: = any IP address
  Corporate IPS are blind to IPv6 | Connection over tunnels / Teredo service: Hosts establish tunnel, even if they are behind IPv4 f/w
+
 
 # BOOK-6: SDLC
 Secure SDLC: Identify & reduce risks early | Save resources to fix security issues later | 
